@@ -1,9 +1,10 @@
-name: CI
+name: ci
 
 on:
   push:
+    tags: ['*']
   pull_request:
-    types: [opened]
+    branches: [master]
 
 jobs:
   commitlint:
@@ -18,13 +19,13 @@ jobs:
       - name: Lints Pull Request commits
         uses: wagoid/commitlint-github-action@v2
 
-  build:
+  test:
     runs-on: ubuntu-latest
 
     strategy:
       fail-fast: false
       matrix:
-        node-version: [12.x, 14.x]
+        node-version: [12, 14]
 
     steps:
       - name: Clone repository
@@ -57,6 +58,6 @@ jobs:
 
       - name: Run Coveralls
         uses: coverallsapp/github-action@master
-        if: startsWith(matrix.node-version, '14.')
+        if: startsWith(matrix.node-version, '14')
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
